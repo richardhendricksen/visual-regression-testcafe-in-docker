@@ -6,15 +6,15 @@
   "scripts": {
     "test": "node testcafe/runners/localRunner.js",
     "test:docker": "node testcafe/runners/dockerRunner.js",
-    "docker:run": "docker run -v \"$PWD\"/testcafe:/opt/testcafe/docker/testcafe -it testcafe-runner",
+    "docker:run": "docker run -v \"$PWD\"/testcafe:/opt/testcafe/docker/testcafe -it testcafe-runner yarn test:docker",
     "docker:build": "docker build . -t testcafe-runner"
   },
   "author": "Richard Hendricksen",
   "license": "ISC",
   "devDependencies": {
     "resemblejs": "^3.2.3",
-    "testcafe-reporter-html": "1.4.6",
     "testcafe": "^1.9.2",
+    "testcafe-reporter-html": "file:testcafe/framework/testcafe-reporter-html",
     "ua-parser-js": "^0.7.20"
   }
 }
