@@ -1,0 +1,23 @@
+### Node
+/node_modules
+
+### IDEs and editors
+/.idea
+*.iml
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.vscode/*
+
+### Test
+logs
+*/screenshots/diff
+*/screenshots/tests
+/reports/
+
+
+### MacOS
+.DS_Store
