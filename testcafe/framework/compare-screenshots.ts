@@ -1,5 +1,4 @@
-import { createCanvas, loadImage } from 'canvas';
-import { copyFileSync, createWriteStream, existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
+import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
 
 import Config from './config';
@@ -17,44 +16,35 @@ function createDirectoryIfNotExists(dir: string): void {
     }
 }
 
-async function combineReportImage(t: TestController, baselineScreenshotPath: string, testScreenshotPath: string, diffScreenshotPath: string): Promise<void> {
-    const baselineImage = await loadImage(baselineScreenshotPath);
-    const testImage = await loadImage(testScreenshotPath);
-    const diffImage = await loadImage(diffScreenshotPath);
+function addBaselineAndDiffScreenshotToTestcontroller(t: TestController): void {
 
-    const {width, height} = baselineImage;
+    // Configured screenshot path
+    // @ts-ignore
+    const screenshotRootPath = t.testRun.opts.screenshots.path
 
-    const canvas = createCanvas(width * 3, height);
-    const ctx = canvas.getContext('2d');
+    // @ts-ignore
+    const actualScreenshot = t.testRun.browserManipulationQueue.screenshotCapturer.testEntry.screenshots[0];
 
-    ctx.drawImage(baselineImage, 0, 0, width, height);
-    ctx.drawImage(testImage, width, 0, width, height);
-    ctx.drawImage(diffImage, 2 * width, 0, width, height);
+    let baselineScreenshot = {
+        testRunId: actualScreenshot.testRunId,
+        screenshotPath: actualScreenshot.screenshotPath.replace(`${screenshotRootPath}/${actualScreenshotDir}`, `${screenshotRootPath}/${baselineScreenshotDir}`),
+        userAgent: actualScreenshot.userAgent,
+        quarantineAttempt: actualScreenshot.quarantineAttempt,
+        takenOnFail: false
+    };
 
-    // add header
-    ctx.font = '18px Impact';
-    ctx.fillText('Baseline', 0, 15);
-    ctx.fillText('Actual', width, 15);
-    ctx.fillText('Diff', width * 2, 15);
+    let diffScreenshot = {
+        testRunId: actualScreenshot.testRunId,
+        screenshotPath: actualScreenshot.screenshotPath.replace(`${screenshotRootPath}/${actualScreenshotDir}`, `${screenshotRootPath}/${diffScreenshotDir}`),
+        userAgent: actualScreenshot.userAgent,
+        quarantineAttempt: actualScreenshot.quarantineAttempt,
+        takenOnFail: false
+    };
 
-    ctx.fillText(`Browser: ${t.browser.name}/${t.browser.os.name}`, 0, 30);
-
-    const out = createWriteStream(testScreenshotPath);
-    const stream = canvas.createPNGStream();
-
-    stream.pipe(out);
-
-    return new Promise((res, rej) => {
-        out.on('finish', res);
-        out.on('error', (err) => {
-            rej(err);
-            out.close();
-        });
-        stream.on('error', (err) => {
-            rej(err);
-            out.close();
-        });
-    });
+    // @ts-ignore
+    t.testRun.browserManipulationQueue.screenshotCapturer.testEntry.screenshots.unshift(baselineScreenshot);
+    // @ts-ignore
+    t.testRun.browserManipulationQueue.screenshotCapturer.testEntry.screenshots.push(diffScreenshot);
 }
 
 export async function compareElementScreenshot(t: TestController, element: Selector, feature: string): Promise<any> {
@@ -101,8 +91,7 @@ export async function compareElementScreenshot(t: TestController, element: Selec
 
     writeFileSync(diffScreenshotPath, result.getBuffer());
 
-    // write combined image to testScreenshot for reporting
-    await combineReportImage(t, baselineScreenshotPath, actualScreenshotPath, diffScreenshotPath);
+    addBaselineAndDiffScreenshotToTestcontroller(t);
 
     return {
         areEqual: result.rawMisMatchPercentage <= Config.MAX_DIFF_PERC,
