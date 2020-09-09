@@ -7,12 +7,13 @@ createTestCafe('localhost', 1337, 1338)
         const runner = testcafe.createRunner();
 
         return runner
-            .src(['tests/**/*.spec.ts'])
-            .browsers(['chrome:headless --disable-gpu'])
+            .src(['testcafe/tests/**/*.spec.ts'])
+            .browsers(['chromium'])
             .reporter(['spec', {
                 name: 'html',
-                output: 'reports/report.html'
+                output: 'testcafe/.reports/report.html'
             }])
+            .screenshots({path: './testcafe/screenshots'})
             .run();
     })
     .then(failedCount => {

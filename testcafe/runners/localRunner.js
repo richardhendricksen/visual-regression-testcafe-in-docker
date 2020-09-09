@@ -8,8 +8,11 @@ createTestCafe('localhost', 1337, 1338)
 
         return runner
             .src(['testcafe/tests/**/*.spec.ts'])
-            .browsers(['chromium'])
-            .reporter(['spec'])
+            .browsers(['chrome'])
+            .reporter(['spec', {
+                name: 'html',
+                output: 'testcafe/.reports/report.html'
+            }])
             .screenshots({path: './testcafe/screenshots'})
             .run();
     })
