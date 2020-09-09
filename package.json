@@ -6,15 +6,16 @@
   "scripts": {
     "test": "node testcafe/runners/localRunner.js",
     "test:docker": "node testcafe/runners/dockerRunner.js",
+    "test:report": "allure serve testcafe/.reports/allure/allure-results",
     "docker:run": "docker run -v \"$PWD\"/testcafe:/opt/testcafe/docker/testcafe -it testcafe-runner yarn test:docker",
     "docker:build": "docker build . -t testcafe-runner"
   },
   "author": "Richard Hendricksen",
   "license": "ISC",
   "devDependencies": {
+    "allure-commandline": "^2.13.0",
     "resemblejs": "^3.2.3",
     "testcafe": "^1.9.2",
-    "testcafe-reporter-html": "file:testcafe/framework/testcafe-reporter-html",
-    "ua-parser-js": "^0.7.20"
+    "testcafe-reporter-allure": "file:testcafe/framework/reporter/testcafe-reporter-allure"
   }
 }

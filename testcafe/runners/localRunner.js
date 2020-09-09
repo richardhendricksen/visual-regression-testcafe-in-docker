@@ -9,10 +9,7 @@ createTestCafe('localhost', 1337, 1338)
         return runner
             .src(['testcafe/tests/**/*.spec.ts'])
             .browsers(['chrome'])
-            .reporter(['spec', {
-                name: 'html',
-                output: 'testcafe/.reports/report.html'
-            }])
+            .reporter(['spec', 'allure'])
             .screenshots({path: './testcafe/screenshots'})
             .run();
     })
