@@ -3318,9 +3318,6 @@ testcafe-legacy-api@4.0.0:
     app-root-path "^2.0.1"
     copy-dir "^0.3.0"
 
-"testcafe-reporter-html@file:testcafe/framework/testcafe-reporter-html":
-  version "0.0.0"
-
 testcafe-reporter-json@^2.1.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/testcafe-reporter-json/-/testcafe-reporter-json-2.2.0.tgz#bb061e054489abdb62add745dd979896b618ea91"
