@@ -4,10 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node testcafe/runners/localRunner.js",
-    "test:report": "allure serve testcafe/.reports/allure/allure-results",
-    "docker:build": "docker build -f docker/Dockerfile . -t testcafe-runner",
-    "docker:run": "docker run -v \"$PWD\"/testcafe:/opt/testcafe/docker/testcafe -it testcafe-runner yarn test"
+    "test": "node testcafe/runners/dockerRunner.js"
   },
   "author": "Richard Hendricksen",
   "license": "ISC",

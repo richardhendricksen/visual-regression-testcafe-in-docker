@@ -14,13 +14,13 @@ RUN apk --no-cache $ALPINE_REPOS upgrade && \
 
 WORKDIR /opt/testcafe/docker/
 
-COPY package.json package.json
-COPY yarn.lock yarn.lock
+COPY docker/package.json package.json
+COPY docker/yarn.lock yarn.lock
 COPY doc-allure-config.js doc-allure-config.js
 COPY testcafe/framework/reporter/testcafe-reporter-allure testcafe/framework/reporter/testcafe-reporter-allure
 RUN yarn install --lockfile && yarn cache clean --force
 
-COPY testcafe-docker.sh testcafe-docker.sh
+COPY docker/testcafe-docker.sh testcafe-docker.sh
 RUN chmod +x /opt/testcafe/docker/testcafe-docker.sh
 
 RUN adduser -D testcafe
