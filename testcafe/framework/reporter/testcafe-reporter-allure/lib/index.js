@@ -102,7 +102,12 @@ exports['default'] = function () {
             if (screenshotPath && fs.existsSync(screenshotPath)) {
                 var img = fs.readFileSync(screenshotPath);
 
-                allure.createAttachment(labels.screenshotLabel, new Buffer(img, 'base64'));
+                const regex = /\/screenshots\/([^\/]+)/g;
+                let screenshotName = regex.exec(screenshotPath)[1];
+                if (screenshotName === 'tests')
+                    screenshotName = 'actual'
+
+                allure.createAttachment(screenshotName, new Buffer(img, 'base64'));
             }
         },
         addJiraLinks: function addJiraLinks(meta) {

@@ -1,10 +1,10 @@
 # testcafe-reporter-allure
-This is the **allure** reporter plugin for [TestCafe](http://devexpress.github.io/testcafe). This is used to generate allure visual reports for testcafe test execution.
+This is a custom **allure** reporter plugin for [TestCafe](http://devexpress.github.io/testcafe). This is used to generate allure visual reports for testcafe test execution.
 
 ## Install
 
 ```
-npm install testcafe-reporter-allure
+npm install file:testcafe/framework/reporter/testcafe-reporter-allure
 ```
 
 ## Usage
