@@ -7,7 +7,8 @@
     "test": "node testcafe/runners/localRunner.js",
     "test:report": "allure serve testcafe/.reports/allure/allure-results",
     "docker:build": "docker build -f docker/Dockerfile . -t testcafe-runner",
-    "docker:run": "docker run -v \"$PWD\"/testcafe:/opt/testcafe/docker/testcafe -it testcafe-runner yarn test"
+    "docker:run": "docker run -v \"$PWD\"/testcafe:/opt/testcafe/docker/testcafe -it testcafe-runner yarn test",
+    "lint": "tslint -p ."
   },
   "author": "Richard Hendricksen",
   "license": "ISC",
@@ -15,6 +16,7 @@
     "allure-commandline": "^2.13.0",
     "resemblejs": "^3.2.3",
     "testcafe": "^1.9.2",
-    "testcafe-reporter-allure": "file:testcafe/framework/reporter/testcafe-reporter-allure"
+    "testcafe-reporter-allure": "file:testcafe/framework/reporter/testcafe-reporter-allure",
+    "tslint": "^6.1.3"
   }
 }

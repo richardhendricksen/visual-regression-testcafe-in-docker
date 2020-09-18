@@ -20,7 +20,7 @@ function addBaselineAndDiffScreenshotToTestcontroller(t: TestController): void {
 
     // Configured screenshot path
     // @ts-ignore
-    const screenshotRootPath = t.testRun.opts.screenshots.path
+    const screenshotRootPath = t.testRun.opts.screenshots.path;
 
     // @ts-ignore
     const actualScreenshot = t.testRun.browserManipulationQueue.screenshotCapturer.testEntry.screenshots[0];
@@ -84,8 +84,8 @@ export async function compareElementScreenshot(t: TestController, element: Selec
 
     // compare images
     const result = await compareImages(
-        await readFileSync(baselineScreenshotPath),
-        await readFileSync(actualScreenshotPath),
+        readFileSync(baselineScreenshotPath),
+        readFileSync(actualScreenshotPath),
         options
     );
 

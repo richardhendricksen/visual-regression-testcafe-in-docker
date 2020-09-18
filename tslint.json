@@ -1,0 +1,32 @@
+{
+  "rules": {
+    "extends": [
+      "tslint:recommended",
+      "tslint-sonarts"
+    ],
+    "max-line-length": [
+      true,
+      140
+    ],
+    "no-floating-promises": true,
+    "no-return-await": true,
+    "await-promise": true,
+    "semicolon": true,
+    "ban": [
+      true,
+      "eval",
+      {
+        "name": ["test", "only"],
+        "message": "do not commit with test.only"
+      },
+      {
+        "name": ["fixture", "only"],
+        "message": "do not commit with fixture.only"
+      },
+      {
+        "name": ["t", "debug"],
+        "message": "do not commit with debug statements"
+      }
+    ]
+  }
+}
