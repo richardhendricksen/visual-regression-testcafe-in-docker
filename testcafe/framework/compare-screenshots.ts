@@ -5,9 +5,8 @@ import Config from './config';
 
 const compareImages = require('resemblejs/compareImages');
 
-const screenshotRootDir = 'testcafe/screenshots/';
 const baselineScreenshotDir = 'baseline/';
-const actualScreenshotDir = 'tests/';
+const actualScreenshotDir = 'actual/';
 const diffScreenshotDir = 'diff/';
 
 function createDirectoryIfNotExists(dir: string): void {
@@ -16,50 +15,70 @@ function createDirectoryIfNotExists(dir: string): void {
     }
 }
 
-function addBaselineAndDiffScreenshotToTestcontroller(t: TestController): void {
-
-    // Configured screenshot path
-    // @ts-ignore
-    const screenshotRootPath = t.testRun.opts.screenshots.path;
+function addBaselineAndDiffScreenshotToTestcontroller(t: TestController, baselineScreenshotPath: string, diffScreenshotPath: string): void {
 
     // @ts-ignore
     const actualScreenshot = t.testRun.browserManipulationQueue.screenshotCapturer.testEntry.screenshots[0];
 
-    let baselineScreenshot = {
-        testRunId: actualScreenshot.testRunId,
-        screenshotPath: actualScreenshot.screenshotPath.replace(`${screenshotRootPath}/${actualScreenshotDir}`, `${screenshotRootPath}/${baselineScreenshotDir}`),
-        userAgent: actualScreenshot.userAgent,
-        quarantineAttempt: actualScreenshot.quarantineAttempt,
-        takenOnFail: false
-    };
+    let attempt;
+    // @ts-ignore
+    if(t.testRun.quarantine) {
+        // @ts-ignore
+        attempt = t.testRun.quarantine.attempts.length + 1;
+    } else {
+        attempt = 1;
+    }
+
+    // only add baseline once
+    if (attempt === 1) {
+        let baselineScreenshot = {
+            testRunId: actualScreenshot.testRunId,
+            screenshotPath: baselineScreenshotPath,
+            userAgent: actualScreenshot.userAgent,
+            quarantineAttempt: attempt,
+            takenOnFail: false
+        };
+
+        // @ts-ignore
+        t.testRun.browserManipulationQueue.screenshotCapturer.testEntry.screenshots.unshift(baselineScreenshot);
+    }
 
     let diffScreenshot = {
         testRunId: actualScreenshot.testRunId,
-        screenshotPath: actualScreenshot.screenshotPath.replace(`${screenshotRootPath}/${actualScreenshotDir}`, `${screenshotRootPath}/${diffScreenshotDir}`),
+        screenshotPath: diffScreenshotPath,
         userAgent: actualScreenshot.userAgent,
-        quarantineAttempt: actualScreenshot.quarantineAttempt,
+        quarantineAttempt: attempt,
         takenOnFail: false
     };
 
-    // @ts-ignore
-    t.testRun.browserManipulationQueue.screenshotCapturer.testEntry.screenshots.unshift(baselineScreenshot);
     // @ts-ignore
     t.testRun.browserManipulationQueue.screenshotCapturer.testEntry.screenshots.push(diffScreenshot);
 }
 
 export async function compareElementScreenshot(t: TestController, element: Selector, feature: string): Promise<any> {
     // @ts-ignore
+    const screenshotRootPath = t.testRun.opts.screenshots.path;
+    // @ts-ignore
     const testCase = t.testRun.test.name;
 
-    const imgName = `${testCase}_${t.browser.name}_${t.browser.os.name}.png`;
+    let imgName;
+    // @ts-ignore
+    if(t.testRun.quarantine) {
+        // @ts-ignore
+        imgName = `${testCase}_${t.browser.name}_${t.browser.os.name}_${t.testRun.quarantine.attempts.length + 1}.png`;
+    } else {
+        imgName = `${testCase}_${t.browser.name}_${t.browser.os.name}.png`;
+    }
 
-    createDirectoryIfNotExists(resolve(screenshotRootDir, actualScreenshotDir, feature));
-    createDirectoryIfNotExists(resolve(screenshotRootDir, baselineScreenshotDir, feature));
-    createDirectoryIfNotExists(resolve(screenshotRootDir, diffScreenshotDir, feature));
+    const baselineImageName = `${testCase}_${t.browser.name}_${t.browser.os.name}.png`;
 
-    const actualScreenshotPath = resolve(screenshotRootDir, actualScreenshotDir, feature, imgName);
-    const baselineScreenshotPath = resolve(screenshotRootDir, baselineScreenshotDir, feature, imgName);
-    const diffScreenshotPath = resolve(screenshotRootDir, diffScreenshotDir, feature, imgName);
+    createDirectoryIfNotExists(resolve(screenshotRootPath, actualScreenshotDir, feature));
+    createDirectoryIfNotExists(resolve(screenshotRootPath, baselineScreenshotDir, feature));
+    createDirectoryIfNotExists(resolve(screenshotRootPath, diffScreenshotDir, feature));
+
+    const actualScreenshotPath = resolve(screenshotRootPath, actualScreenshotDir, feature, imgName);
+    const baselineScreenshotPath = resolve(screenshotRootPath, baselineScreenshotDir, feature, baselineImageName);
+    const diffScreenshotPath = resolve(screenshotRootPath, diffScreenshotDir, feature, imgName);
 
     await t.takeElementScreenshot(element, actualScreenshotDir + feature + '/' + imgName);
 
@@ -91,7 +110,7 @@ export async function compareElementScreenshot(t: TestController, element: Selec
 
     writeFileSync(diffScreenshotPath, result.getBuffer());
 
-    addBaselineAndDiffScreenshotToTestcontroller(t);
+    addBaselineAndDiffScreenshotToTestcontroller(t, baselineScreenshotPath, diffScreenshotPath);
 
     return {
         areEqual: result.rawMisMatchPercentage <= Config.MAX_DIFF_PERC,
