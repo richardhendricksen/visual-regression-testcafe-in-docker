@@ -16,7 +16,7 @@
     "allure-commandline": "^2.13.0",
     "resemblejs": "^3.2.3",
     "testcafe": "^1.9.2",
-    "testcafe-reporter-allure": "file:testcafe/framework/reporter/testcafe-reporter-allure",
+    "testcafe-reporter-allure": "npm:@richardhendricksen/testcafe-reporter-allure@^1.0.2",
     "tslint": "^6.1.3"
   }
 }

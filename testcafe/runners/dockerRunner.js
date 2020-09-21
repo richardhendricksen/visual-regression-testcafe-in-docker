@@ -11,7 +11,7 @@ createTestCafe('localhost', 1337, 1338)
             .browsers(['chromium'])
             .reporter(['spec', 'allure'])
             .screenshots({path: './testcafe/screenshots'})
-            .run();
+            .run({quarantineMode: true});
     })
     .then(failedCount => {
         console.log('Tests failed: ' + failedCount);

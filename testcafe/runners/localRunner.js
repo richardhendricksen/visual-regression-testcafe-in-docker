@@ -10,8 +10,9 @@ createTestCafe('localhost', 1337, 1338)
             .src(['testcafe/tests/**/*.spec.ts'])
             .browsers(['chrome'])
             .reporter(['spec', 'allure'])
+            .tsConfigPath('tsconfig.json')
             .screenshots({path: './testcafe/screenshots'})
-            .run();
+            .run({quarantineMode: true});
     })
     .then(failedCount => {
         console.log('Tests failed: ' + failedCount);

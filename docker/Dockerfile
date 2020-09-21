@@ -16,8 +16,7 @@ WORKDIR /opt/testcafe/docker/
 
 COPY docker/package.json package.json
 COPY docker/yarn.lock yarn.lock
-COPY doc-allure-config.js doc-allure-config.js
-COPY testcafe/framework/reporter/testcafe-reporter-allure testcafe/framework/reporter/testcafe-reporter-allure
+COPY allure.config.js allure.config.js
 RUN yarn install --lockfile && yarn cache clean --force
 
 COPY docker/testcafe-docker.sh testcafe-docker.sh
