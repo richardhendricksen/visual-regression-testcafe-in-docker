@@ -86,12 +86,6 @@ var defaultReporterConfig = {
     CLEAN_SCREENSHOT_DIR: true,
     ENABLE_SCREENSHOTS: true,
     ENABLE_QUARANTINE: false,
-    ENABLE_VISUAL_REGRESSION_REPORTING: false,
-    VISUAL_REGRESSION: {
-        BASELINE_PATH: '/baseline/',
-        ACTUAL_PATH: '/actual/',
-        DIFF_PATH: '/diff/',
-    },
     ENABLE_LOGGING: false,
     CONCURRENCY: 1,
     META: {
@@ -101,8 +95,15 @@ var defaultReporterConfig = {
     LABEL: {
         ISSUE: 'JIRA Issue',
         FLAKY: 'Flaky test',
-        SCREENSHOT_MANUAL: 'Screenshot taken manually',
-        SCREENSHOT_ON_FAIL: 'Screenshot taken on fail',
+        SCREENSHOTS: {
+            ON_FAIL: 'Screenshot taken on fail',
+            MANUAL: 'Screenshot taken manually',
+            BASED_ON_PATH: [
+                { regex: '/baseline/', label: 'Baseline' },
+                { regex: '/actual/', label: 'Actual' },
+                { regex: '/diff/', label: 'Diff' },
+            ],
+        },
         DEFAULT_STEP_NAME: 'Test Step',
     },
 };
@@ -548,34 +549,33 @@ var AllureReporter = /** @class */ (function () {
     };
     AllureReporter.prototype.addScreenshotAttachment = function (test, screenshot) {
         if (screenshot.screenshotPath && fs.existsSync(screenshot.screenshotPath)) {
-            var screenshotName = void 0;
+            var screenshotName_1;
             if (screenshot.takenOnFail) {
-                screenshotName = reporterConfig$2.LABEL.SCREENSHOT_ON_FAIL;
-            }
-            else if (reporterConfig$2.ENABLE_VISUAL_REGRESSION_REPORTING) {
-                if (screenshot.screenshotPath.includes(reporterConfig$2.VISUAL_REGRESSION.BASELINE_PATH)) {
-                    screenshotName = 'Baseline';
-                }
-                else if (screenshot.screenshotPath.includes(reporterConfig$2.VISUAL_REGRESSION.ACTUAL_PATH)) {
-                    screenshotName = 'Actual';
-                }
-                else if (screenshot.screenshotPath.includes(reporterConfig$2.VISUAL_REGRESSION.DIFF_PATH)) {
-                    screenshotName = 'Diff';
-                }
-                if (screenshot.quarantineAttempt && screenshot.quarantineAttempt !== 1) {
-                    screenshotName += " attempt " + screenshot.quarantineAttempt;
-                }
+                screenshotName_1 = reporterConfig$2.LABEL.SCREENSHOTS.ON_FAIL;
             }
             else {
-                screenshotName = reporterConfig$2.LABEL.SCREENSHOT_MANUAL;
+                screenshotName_1 = reporterConfig$2.LABEL.SCREENSHOTS.MANUAL;
+            }
+            // Rename screenshots based on path
+            if (reporterConfig$2.LABEL.SCREENSHOTS.BASED_ON_PATH.length > 0) {
+                reporterConfig$2.LABEL.SCREENSHOTS.BASED_ON_PATH.forEach(function (_a) {
+                    var regex = _a.regex, label = _a.label;
+                    if (screenshot.screenshotPath.match(new RegExp(regex, 'i'))) {
+                        screenshotName_1 = label;
+                    }
+                });
+            }
+            // Add attempt number if it's not the first attempt
+            if (screenshot.quarantineAttempt && screenshot.quarantineAttempt !== 1) {
+                screenshotName_1 = screenshotName_1 + " - attempt " + screenshot.quarantineAttempt;
             }
             // Add the useragent data to the screenshots to differentiate between browsers within the tests.
             if (this.userAgents && this.userAgents.length > 1 && screenshot.userAgent) {
-                screenshotName = screenshotName + " - " + screenshot.userAgent;
+                screenshotName_1 = screenshotName_1 + " - " + screenshot.userAgent;
             }
             var img = fs.readFileSync(screenshot.screenshotPath);
             var file = this.runtime.writeAttachment(img, allureJsCommons.ContentType.PNG);
-            test.addAttachment(screenshotName, allureJsCommons.ContentType.PNG, file);
+            test.addAttachment(screenshotName_1, allureJsCommons.ContentType.PNG, file);
         }
     };
     /* Merge the steps together based on their name. */

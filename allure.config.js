@@ -10,11 +10,13 @@ module.exports = {
     ENABLE_SCREENSHOTS: true,
     ENABLE_QUARANTINE: true,
     ENABLE_LOGGING: false,
-    ENABLE_VISUAL_REGRESSION_REPORTING: true,
-    VISUAL_REGRESSION: {
-        BASELINE_PATH: '/baseline/',
-        ACTUAL_PATH: '/actual/',
-        DIFF_PATH: '/diff/',
+    LABEL: {
+        SCREENSHOTS: {
+            BASED_ON_PATH: [
+                {regex: '/baseline/', label: 'Baseline'},
+                {regex: '/actual/', label: 'Actual'},
+                {regex: '/diff/', label: 'Diff'}
+            ]
+        }
     }
-
 };
