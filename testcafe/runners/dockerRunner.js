@@ -1,4 +1,5 @@
 const createTestCafe = require('testcafe');
+const allureReporter = require('testcafe-reporter-allure');
 let testcafe = null;
 
 createTestCafe('localhost', 1337, 1338)
@@ -9,7 +10,7 @@ createTestCafe('localhost', 1337, 1338)
         return runner
             .src(['testcafe/tests/**/*.spec.ts'])
             .browsers(['chromium'])
-            .reporter(['spec', 'allure'])
+            .reporter(['spec', allureReporter])
             .screenshots({path: './testcafe/screenshots'})
             .run({quarantineMode: true});
     })
