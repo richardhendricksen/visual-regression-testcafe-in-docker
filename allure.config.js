@@ -11,5 +11,10 @@ module.exports = {
     ENABLE_QUARANTINE: true,
     ENABLE_LOGGING: false,
     ENABLE_VISUAL_REGRESSION_REPORTING: true,
+    VISUAL_REGRESSION: {
+        BASELINE_PATH: '/baseline/',
+        ACTUAL_PATH: '/actual/',
+        DIFF_PATH: '/diff/',
+    }
 
 };
