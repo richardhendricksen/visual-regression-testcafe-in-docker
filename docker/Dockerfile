@@ -10,14 +10,14 @@ ENV ALPINE_REPOS="\
 
 RUN apk --no-cache $ALPINE_REPOS upgrade && \
  apk --no-cache $ALPINE_REPOS add \
- libevent nodejs yarn npm chromium firefox-esr xwininfo xvfb dbus eudev ttf-freefont fluxbox procps build-base g++ cairo-dev jpeg-dev pango-dev giflib-dev
+ libevent nodejs npm chromium firefox-esr xwininfo xvfb dbus eudev ttf-freefont fluxbox procps build-base g++ cairo-dev jpeg-dev pango-dev giflib-dev
 
 WORKDIR /opt/testcafe/docker/
 
 COPY docker/package.json package.json
-COPY docker/yarn.lock yarn.lock
+COPY testcafe/framework/reporter/testcafe-reporter-allure testcafe/framework/reporter/testcafe-reporter-allure
 COPY allure.config.js allure.config.js
-RUN yarn install --lockfile && yarn cache clean --force
+RUN npm install && npm cache clean --force
 
 COPY docker/testcafe-docker.sh testcafe-docker.sh
 RUN chmod +x /opt/testcafe/docker/testcafe-docker.sh
