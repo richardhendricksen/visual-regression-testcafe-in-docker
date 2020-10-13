@@ -6,8 +6,10 @@
   "scripts": {
     "test": "node testcafe/runners/localRunner.js",
     "test:report": "allure serve testcafe/.reports/allure/allure-results",
-    "docker:build": "docker build -f docker/Dockerfile . -t testcafe-runner",
-    "docker:run": "docker run -v \"$PWD\"/testcafe:/opt/testcafe/docker/testcafe -it testcafe-runner npm test",
+    "docker:build:alpine": "docker build -f docker/testcafe-chromium-alpine/Dockerfile . -t testcafe-chromium-alpine",
+    "docker:build:debian": "docker build -f docker/testcafe-chrome-debian/Dockerfile . -t testcafe-chrome-debian",
+    "docker:run:alpine": "docker run -v \"$PWD\"/testcafe:/opt/testcafe/docker/testcafe -it testcafe-chromium-alpine npm run test:chromium",
+    "docker:run:debian": "docker run -v \"$PWD\"/testcafe:/opt/testcafe/docker/testcafe -it testcafe-chrome-debian npm run test:chrome",
     "lint": "tslint -p ."
   },
   "author": "Richard Hendricksen",

@@ -9,7 +9,7 @@ createTestCafe('localhost', 1337, 1338)
 
         return runner
             .src(['testcafe/tests/**/*.spec.ts'])
-            .browsers(['chromium'])
+            .browsers(['chromium:headless'])
             .reporter(['spec', allureReporter])
             .screenshots({path: './testcafe/screenshots'})
             .run({quarantineMode: true});
