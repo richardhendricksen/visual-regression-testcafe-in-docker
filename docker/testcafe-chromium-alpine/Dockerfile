@@ -21,5 +21,3 @@ RUN npm install && npm cache clean --force
 
 RUN adduser --disabled-password testcafe
 USER testcafe
-
-CMD ["/bin/bash"]

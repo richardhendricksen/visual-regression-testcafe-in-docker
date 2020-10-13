@@ -72,5 +72,3 @@ RUN npm install && npm cache clean --force
 
 RUN useradd testcafe
 USER testcafe
-
-CMD ["/bin/bash"]
