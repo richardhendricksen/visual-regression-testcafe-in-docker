@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test:chrome": "node testcafe/runners/dockerChromeRunner.js",
-    "test:chromium": "node testcafe/runners/dockerChromiumRunner.js"
+    "test": "node testcafe/runners/dockerRunner.js"
   },
   "author": "Richard Hendricksen",
   "license": "ISC",
