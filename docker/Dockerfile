@@ -1,16 +1,15 @@
-FROM rhendricksen/testcafe-chrome-nodejs
+FROM circleci/node:12-browsers
 
 USER root
-RUN mkdir /app && chown chrome:chrome /app
-# Create seperate volume for node_modules folder
-#VOLUME /app/node_modules
+RUN npm install -g ts-node
+RUN mkdir /runner && chown circleci:circleci /runner
 
-WORKDIR /app
+WORKDIR /runner
 
-COPY --chown=chrome:chrome docker/package.json package.json
-COPY --chown=chrome:chrome testcafe/framework/reporter/testcafe-reporter-allure testcafe/framework/reporter/testcafe-reporter-allure
-COPY --chown=chrome:chrome allure.config.js allure.config.js
+COPY --chown=circleci:circleci docker/package.json package.json
+COPY --chown=circleci:circleci testcafe/framework/reporter/testcafe-reporter-allure testcafe/framework/reporter/testcafe-reporter-allure
+COPY --chown=circleci:circleci allure.config.js allure.config.js
 
-USER chrome
+USER circleci
 
 RUN npm install && npm cache clean --force
