@@ -1,13 +1,14 @@
 {
-  "name": "testcafe-in-docker",
+  "name": "visual-regression-testcafe-in-docker",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node testcafe/runners/localRunner.js",
-    "test:report": "allure serve testcafe/.reports/allure/allure-results",
+    "test": "ts-node testcafe/runners/localRunner.ts",
+    "test:docker": "yarn docker:run ts-node testcafe/runners/dockerRunner.ts",
+    "test:report": "allure serve testcafe/reports/allure/allure-results",
     "docker:build": "docker build -f docker/Dockerfile . -t testcafe-runner",
-    "docker:run": "docker run -v \"$PWD\"/testcafe:/app/testcafe -it testcafe-runner yarn test",
+    "docker:run": "docker run -v ${PWD}:/runner/project -v /runner/project/node_modules -w /runner/project -it --rm testcafe-runner",
     "lint": "tslint -p ."
   },
   "author": "Richard Hendricksen",
@@ -17,6 +18,7 @@
     "resemblejs": "^3.2.3",
     "testcafe": "^1.9.2",
     "testcafe-reporter-allure": "file:testcafe/framework/reporter/testcafe-reporter-allure",
+    "ts-node": "^9.1.1",
     "tslint": "^6.1.3"
   }
 }

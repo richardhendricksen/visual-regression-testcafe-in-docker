@@ -1,5 +1,22 @@
 {
   "compilerOptions": {
-    "types": ["testcafe"]
+    "target": "es2017",
+    "moduleResolution": "node",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "allowJs": true,
+    "alwaysStrict": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "lib": [
+      "es2016",
+      "es2017",
+      "dom"
+    ],
+    "baseUrl": "./",
+    "types": [
+      "node",
+      "testcafe"
+    ]
   }
 }

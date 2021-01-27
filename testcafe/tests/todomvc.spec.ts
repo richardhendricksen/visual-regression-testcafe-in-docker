@@ -10,11 +10,7 @@ const mock = RequestMockBuilder.new()
 
 fixture(`todomvc`)
     .page(`http://todomvc.com/examples/angular2/`)
-    .requestHooks(mock)
-    .beforeEach(async t => {
-        await t.resizeWindow(1280, 1024);
-        await t.eval(() => location.reload(true));
-    });
+    .requestHooks(mock);
 
 test('Input field', async t => {
 
